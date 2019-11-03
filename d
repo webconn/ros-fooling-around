@@ -22,6 +22,7 @@ if [[ ! -d $SHARED_DIR ]]; then
 fi
 
 CONTAINER_NAME="$USER-rosfooling-$(pwd | sha256sum - | head -c 8)"
+HOME=/home/$USER
 
 sync() {
         docker pull $IMAGE
@@ -30,8 +31,8 @@ sync() {
 up() {
         docker run --rm -d -ti \
             --tmpfs /tmp \
-            -v $SHARED_DIR:/userdata/ros_shared \
-            -v $PWD:/userdata/workspace \
+            -v $SHARED_DIR:$HOME/ros_shared \
+            -v $PWD:$HOME/workspace \
             -v $X11_SOCKET:$X11_SOCKET \
             --name $CONTAINER_NAME \
             -h ros-fooling-around \

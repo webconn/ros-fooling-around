@@ -13,7 +13,8 @@ if ! getent group "$DEV_GROUP" >& /dev/null; then
 fi
 
 if ! getent passwd "$DEV_USER" >& /dev/null; then
-    adduser --uid "$DEV_UID" --gecos "" --gid "$DEV_GID" --disabled-password --home "/userdata" "$DEV_USER" >& /dev/null
+    adduser --uid "$DEV_UID" --gecos "" --gid "$DEV_GID" --disabled-password --home "/home/$DEV_USER" "$DEV_USER" >& /dev/null
+    mkdir -p "/home/$DEV_USER" && chown "$DEV_USER:$DEV_GROUP" "/home/$DEV_USER"
 fi
 
 #configure sudo

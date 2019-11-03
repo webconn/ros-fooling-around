@@ -1,7 +1,9 @@
 . /etc/bash_completion
 . /opt/ros/melodic/setup.bash
 
-ROS_SHARED=/userdata/ros_shared
+ROS_SHARED=$HOME/ros_shared
+ROS_WORKSPACE=$HOME/workspace
 DOTS=$ROS_SHARED/dots
 
+[[ -f $ROS_WORKSPACE/devel/setup.bash ]] && . $ROS_WORKSPACE/devel/setup.bash
 [[ -f $DOTS/.bashrc ]] && . $DOTS/.bashrc

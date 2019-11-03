@@ -1,0 +1,4 @@
+[submodule "src/rviz_textured_quads"]
+	path = src/rviz_textured_quads
+        url = git@github.com:webconn/rviz_textured_quads
+        branch = image_topic
