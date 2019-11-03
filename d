@@ -24,6 +24,11 @@ fi
 CONTAINER_NAME="$USER-rosfooling-$(pwd | sha256sum - | head -c 8)"
 HOME=/home/$USER
 
+DRI_DEV=
+if [[ -e /dev/dri ]]; then
+        DRI_DEV="--device /dev/dri:/dev/dri"
+fi
+
 sync() {
         docker pull $IMAGE
 }
@@ -34,6 +39,7 @@ up() {
             -v $SHARED_DIR:$HOME/ros_shared \
             -v $PWD:$HOME/workspace \
             -v $X11_SOCKET:$X11_SOCKET \
+            $DRI_DEV \
             --name $CONTAINER_NAME \
             -h ros-fooling-around \
             $IMAGE
