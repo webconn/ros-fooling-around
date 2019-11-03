@@ -81,8 +81,8 @@ default_flags = [
     '.',
 
     # include third party libraries
-    '-isystem',
-    '/usr/include',
+    #'-isystem',
+    #'/usr/include',
     #'-isystem',
     # 'include',
     # './include'
@@ -223,7 +223,7 @@ def GetCompilationInfoForFile(filename, database):
     return database.GetCompilationInfoForFile(filename)
 
 
-def FlagsForFile(filename):
+def Settings(filename, **kwargs):
     database = GetDatabase(GetCompilationDatabaseFolder(filename))
     if database:
         # Bear in mind that compilation_info.compiler_flags_ does NOT return a
