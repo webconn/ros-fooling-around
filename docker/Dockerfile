@@ -9,5 +9,3 @@ RUN apt-get update && apt-get -y install nano vim bash-completion \
 
 RUN mkdir /docker /userdata
 COPY bashrc entrypoint.sh /docker/
-
-ENTRYPOINT ["/docker/entrypoint.sh"]

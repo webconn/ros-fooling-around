@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 export DEV_UID=${DEV_UID:-1000}
 DEV_USER=${DEV_USER:-user}
 DEV_GID=${DEV_GID:-$DEV_UID}

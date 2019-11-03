@@ -1,4 +1,7 @@
 . /etc/bash_completion
 . /opt/ros/melodic/setup.bash
 
-[[ -f /userdata/dots/.bashrc ]] && . /userdata/dots/.bashrc
+ROS_SHARED=/userdata/ros_shared
+DOTS=$ROS_SHARED/dots
+
+[[ -f $DOTS/.bashrc ]] && . $DOTS/.bashrc
