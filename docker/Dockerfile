@@ -6,7 +6,7 @@ LABEL com.nvidia.volumes.needed="nvidia_driver"
 
 RUN rm /etc/apt/apt.conf.d/docker-clean
 
-RUN apt-get update && apt-get -y install nano vim bash-completion \
+RUN apt-get update && apt-get -y install nano vim bash-completion uncrustify \
     qt5-default libgl1-mesa-glx libgl1-mesa-dri \
     ros-melodic-rviz ros-melodic-tf ros-melodic-tf2 ros-melodic-urdf ros-melodic-xacro \
     ros-melodic-robot-state-publisher ros-melodic-joint-state-publisher ros-melodic-joint-state-controller \

@@ -1,0 +1,3 @@
+set sw=2 ts=2 sts=2
+
+let g:uncrustify_config_file = "~/workspace/devel/uncrustify.cfg"
