@@ -1,0 +1,4 @@
+. /etc/bash_completion
+. /opt/ros/melodic/setup.bash
+
+[[ -f /userdata/dots/.bashrc ]] && . /userdata/dots/.bashrc
