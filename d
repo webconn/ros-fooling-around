@@ -3,7 +3,7 @@
 set -e
 
 SHARED_DIR=~/ros_shared/
-IMAGE=webconn/ros-fooling-around
+IMAGE=webconnru/ros-fooling-around
 PWD=`pwd`
 X11_SOCKET=/tmp/.X11-unix
 

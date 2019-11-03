@@ -1,5 +1,5 @@
 #!/bin/bash
 
-IMAGE=webconn/ros-fooling-around
+IMAGE=webconnru/ros-fooling-around
 
 docker build -t $IMAGE .
