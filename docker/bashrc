@@ -5,5 +5,11 @@ ROS_SHARED=$HOME/ros_shared
 ROS_WORKSPACE=$HOME/workspace
 DOTS=$ROS_SHARED/dots
 
+if $USE_NVIDIA; then
+    IS_NVIDIA="(nvidia)"
+fi
+
+PS1="\u@\h${IS_NVIDIA}:\w$ "
+
 [[ -f $ROS_WORKSPACE/devel/setup.bash ]] && . $ROS_WORKSPACE/devel/setup.bash
 [[ -f $DOTS/.bashrc ]] && . $DOTS/.bashrc

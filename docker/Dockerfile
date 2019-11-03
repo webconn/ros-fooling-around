@@ -2,6 +2,8 @@ FROM ros:melodic
 
 MAINTAINER Nikita Maslov <wkernelteam@gmail.com>
 
+LABEL com.nvidia.volumes.needed="nvidia_driver"
+
 RUN rm /etc/apt/apt.conf.d/docker-clean
 
 RUN apt-get update && apt-get -y install nano vim bash-completion \

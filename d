@@ -7,6 +7,16 @@ IMAGE=webconn/ros-fooling-around
 PWD=`pwd`
 X11_SOCKET=/tmp/.X11-unix
 
+EXEC=docker
+USE_NVIDIA=false
+
+if which nvidia-docker >& /dev/null; then
+    EXEC=nvidia-docker
+    USE_NVIDIA=true
+    NVIDIA_FLAGS="-e QT_X11_NO_MITSHM=1"
+    echo "Using nvidia-docker"
+fi
+
 if [[ $0 != './d' ]]; then
         echo "Must run ./d in repository root."
         exit 2
@@ -25,17 +35,19 @@ CONTAINER_NAME="$USER-rosfooling-$(pwd | sha256sum - | head -c 8)"
 HOME=/home/$USER
 
 DRI_DEV=
-if [[ -e /dev/dri ]]; then
+if ! $USE_NVIDIA && [[ -e /dev/dri ]]; then
         DRI_DEV="--device /dev/dri:/dev/dri"
 fi
 
 sync() {
-        docker pull $IMAGE
+        $EXEC pull $IMAGE
 }
 
 up() {
-        docker run --rm -d -ti \
+        $EXEC run --rm -d -ti \
             --tmpfs /tmp \
+            -e USE_NVIDIA=$USE_NVIDIA \
+            $NVIDIA_FLAGS \
             -v $SHARED_DIR:$HOME/ros_shared \
             -v $PWD:$HOME/workspace \
             -v $X11_SOCKET:$X11_SOCKET \
@@ -46,14 +58,16 @@ up() {
 }
 
 down() {
-        docker stop $CONTAINER_NAME
+        $EXEC stop $CONTAINER_NAME
 }
 
 attach() {
-        docker exec -ti \
+        $EXEC exec -ti \
             -e DISPLAY=$DISPLAY \
             -e DEV_UID=$UID \
             -e DEV_USER=$USER \
+            -e USE_NVIDIA=$USE_NVIDIA \
+            $NVIDIA_FLAGS \
             $CONTAINER_NAME \
             /docker/entrypoint.sh
 }

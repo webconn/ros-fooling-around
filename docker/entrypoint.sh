@@ -23,4 +23,13 @@ if [[ ! -f $SUDOERS_FILE ]]; then
     echo "$DEV_USER ALL=(ALL) NOPASSWD: ALL" > $SUDOERS_FILE
 fi
 
-exec sudo -E -i -u $DEV_USER /bin/bash --rcfile /docker/bashrc
+SUDO_VARS=
+
+if $USE_NVIDIA; then
+    echo "Using nvidia backend"
+    SUDO_VARS="USE_NVIDIA=true ${SUDO_VARS}"
+    SUDO_VARS="PATH=/usr/local/nvidia/bin:${PATH} ${SUDO_VARS}"
+    SUDO_VARS="LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH} ${SUDO_VARS}"
+fi
+
+exec sudo -E -i -u $DEV_USER $SUDO_VARS /bin/bash --rcfile /docker/bashrc
