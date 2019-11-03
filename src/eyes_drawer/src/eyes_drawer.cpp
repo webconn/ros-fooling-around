@@ -1,5 +1,6 @@
 #include <eyes_drawer/eyes_drawer.h>
 
+#include <ros/assert.h>
 #include <opencv2/highgui/highgui.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <algorithm>
@@ -20,7 +21,8 @@ EyeDrawer::EyeDrawer(ros::NodeHandle& nh,
   , poi_frame_(poi_frame)
   , meters_per_pixel_(meters_per_pixel)
   , img_w_(img_w)
-  , img_h_(img_h) {}
+  , img_h_(img_h) {
+}
 
 void EyeDrawer::init() {
   img_pub_ = it_.advertise(std::string("eyes/") + eye_name_, 1);
@@ -54,10 +56,8 @@ void EyeDrawer::redraw() {
   tf::Vector3 result = get_point_in_display_coords(
       eye_to_display_.getOrigin(), poi_to_display.getOrigin());
 
-  geometry_msgs::Vector3 msg;
-  msg.x = result.x();
-  msg.y = result.y();
-  msg.z = result.z();
+  // we must get result in display plane, so z coordinate must be 0
+  ROS_ASSERT(std::abs(result.z()) < 1e-6);
 
   draw_and_publish(result.x(), result.y());
 }
