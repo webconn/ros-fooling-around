@@ -23,11 +23,10 @@ if [[ ! -f $SUDOERS_FILE ]]; then
     echo "$DEV_USER ALL=(ALL) NOPASSWD: ALL" > $SUDOERS_FILE
 fi
 
-SUDO_VARS="USE_NVIDIA=false"
+SUDO_VARS="TERM=$TERM USE_NVIDIA=$USE_NVIDIA"
 
 if $USE_NVIDIA; then
     echo "Using nvidia backend"
-    SUDO_VARS="USE_NVIDIA=true"
     SUDO_VARS="PATH=/usr/local/nvidia/bin:${PATH} ${SUDO_VARS}"
     SUDO_VARS="LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH} ${SUDO_VARS}"
 fi

@@ -67,6 +67,7 @@ attach() {
             -e DEV_UID=$UID \
             -e DEV_USER=$USER \
             -e USE_NVIDIA=$USE_NVIDIA \
+            -e TERM=$TERM \
             $NVIDIA_FLAGS \
             $CONTAINER_NAME \
             /docker/entrypoint.sh
