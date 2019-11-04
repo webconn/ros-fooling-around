@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(eyes_drawer)
 
+set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/" ${CMAKE_MODULE_PATH})
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -14,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 find_package(OpenCV)
+find_package(cairo)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -105,7 +108,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES eyes_drawer
 #  CATKIN_DEPENDS image_transport roscpp
-#  DEPENDS system_lib
+DEPENDS system_lib cairo
 )
 
 ###########
@@ -133,7 +136,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable(${PROJECT_NAME}_node src/eyes_drawer_node.cpp src/eyes_drawer.cpp)
+add_executable(${PROJECT_NAME}_node src/eyes_drawer_node.cpp src/eyes_drawer.cpp src/eyes_render.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -148,6 +151,7 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 ## Specify libraries to link a library or executable target against
 target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
+  cairo
 )
 
 #############
