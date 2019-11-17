@@ -30,7 +30,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: Image
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -69,6 +69,8 @@ Visualization Manager:
           Value: true
         left_origin:
           Value: true
+        point_of_interest:
+          Value: true
         right_display:
           Value: true
         right_origin:
@@ -92,6 +94,8 @@ Visualization Manager:
                 {}
               right_origin:
                 {}
+          point_of_interest:
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz_textured_quads/MeshDisplayCustom
@@ -110,7 +114,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /eyes_drawer/eyes/left
+      Image Topic: /test_image
       Max Value: 1
       Median window: 5
       Min Value: 0

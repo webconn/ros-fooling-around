@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     try {
       left_drawer.redraw();
       right_drawer.redraw();
-      render.draw_and_publish(0, 0);
+      render.draw_and_publish(img_width / 2.0, img_height / 2);
     } catch (tf::TransformException& ex) {
       ROS_ERROR("%s", ex.what());
       ros::Duration(1.0).sleep();
