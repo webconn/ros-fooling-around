@@ -13,6 +13,7 @@ class EyeDrawer {
               const std::string& eye_origin_frame,
               const std::string& display_origin_frame,
               const std::string& poi_frame,
+              const std::string& light_frame,
               double meters_per_pixel,
               int img_w, int img_h);
 

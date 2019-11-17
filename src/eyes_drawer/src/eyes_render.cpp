@@ -23,10 +23,6 @@ EyesRender::~EyesRender() {
   cairo_surface_destroy(surface_);
 }
 
-struct Color {
-  double r = 0, g = 0, b = 0;
-};
-
 static const Color grad_top{ 33 / 255.0, 70 / 255.0, 110 / 255.0 },
 grad_bottom{ 61 / 255.0, 117 / 255.0, 180 / 255.0 };
 
@@ -44,28 +40,22 @@ static const double kMarkStartAngle = M_PI + (M_PI / 2 - 3 * kMarkStepAngle);
 
 static const int kNumMarks = 6;
 static const Color kMarks[kNumMarks] = {
-  { 89,  145,  206       },
-  { 117, 168,  221       },
-  { 63,  120,  185       },
-  { 63,  120,  183       },
-  { 75,  131,  192       },
-  { 71,  125,  187       }
-};
-
-struct Flare {
-  int dx, dy;
-  double diam;
-  double x_scale;
+  { 89,  145,  206         },
+  { 117, 168,  221         },
+  { 63,  120,  185         },
+  { 63,  120,  183         },
+  { 75,  131,  192         },
+  { 71,  125,  187         }
 };
 
 static const int kNumFlares = 2;
 static const Flare kFlares[kNumFlares] = {
-  {40, -40, 50.0, 0.6},
-  {10, 20, 10.0, 0.95}
+  { 40, -40, 50.0,  0.6  },
+  { 5,  20,  10.0,  0.95 }
 };
 
-void EyesRender::draw_and_publish(size_t x, size_t y) {
-  renderer_->draw(surface_, x, y);
+void EyesRender::draw_and_publish(int x, int y, double iris_size, double eye_size, int flare_x, int flare_y, double flare_size) {
+  renderer_->draw(surface_, x, y, iris_size, eye_size, flare_x, flare_y, flare_size);
 
   cairo_surface_flush(surface_);
 
@@ -180,17 +170,19 @@ void PonyEyesRenderer::make_flare(cairo_t *cr) {
   cairo_fill(cr);
 }
 
-void PonyEyesRenderer::draw(cairo_surface_t *surface, size_t x, size_t y) {
+void PonyEyesRenderer::draw(cairo_surface_t *surface,
+                            int x, int y, double iris_size, double eye_size,
+                            int flare_x, int flare_y, double flare_size) {
   cairo_t *cr = cairo_create(surface);
 
   cairo_set_source_rgb(cr, 1, 1, 1);
   cairo_paint(cr);
 
-  cairo_translate(cr, x, y);
   {
     cairo_matrix_t save_matrix;
     cairo_get_matrix(cr, &save_matrix);
 
+    cairo_translate(cr, x, y);
     cairo_rotate(cr, kEyeRotation);
 
     make_iris(cr);
@@ -198,7 +190,16 @@ void PonyEyesRenderer::draw(cairo_surface_t *surface, size_t x, size_t y) {
     cairo_set_matrix(cr, &save_matrix);
   }
 
-  make_flare(cr);
+  {
+    cairo_matrix_t save_matrix;
+    cairo_get_matrix(cr, &save_matrix);
+
+    cairo_translate(cr, flare_x, flare_y);
+
+    make_flare(cr);
+
+    cairo_set_matrix(cr, &save_matrix);
+  }
 
   cairo_destroy(cr);
 }
