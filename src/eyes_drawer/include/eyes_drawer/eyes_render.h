@@ -54,4 +54,5 @@ class PonyEyesRenderer : public IEyesRenderer {
     void make_background(cairo_t* cr);
     void make_iris(cairo_t* cr);
     void make_eye(cairo_t* cr);
+    void make_flare(cairo_t* cr);
 };
