@@ -1,3 +1,4 @@
+#include <cmath>
 #include <eyes_drawer/eyes_render.h>
 #include <cairo/cairo.h>
 #include <cstdlib>
@@ -11,7 +12,8 @@ EyesRender::EyesRender(image_transport::ImageTransport& it,
                        size_t                           img_width,
                        size_t                           img_height)
   : img_width_(img_width)
-  , img_height_(img_height) {
+  , img_height_(img_height)
+  , img_diam_(std::sqrt(img_width * img_width + img_height * img_height)) {
   img_pub_ = it.advertise(image_topic, 1);
   surface_ = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, img_width_, img_height_);
 }
@@ -27,13 +29,27 @@ struct Color {
 static const Color grad_top{ 33 / 255.0, 70 / 255.0, 110 / 255.0 },
 grad_bottom{ 61 / 255.0, 117 / 255.0, 180 / 255.0 };
 
-static const double kIrisXScale = 0.65;
+static const double kIrisXScale = 0.7;
 static const double kIrisHeight = 120;
-static const double kIrisXOffset = -10;
-static const double kIrisYOffset = -10;
+static const double kIrisXOffset = 0;
+static const double kIrisYOffset = -5;
 
 static const double kEyeXScale = 0.7;
-static const double kEyeHeight = 60;
+static const double kEyeHeight = 80;
+static const double kEyeRotation = 0.2;
+
+static const double kMarkStepAngle = 0.3;
+static const double kMarkStartAngle = M_PI + (M_PI / 2 - 3 * kMarkStepAngle);
+
+static const int kNumMarks = 6;
+static const Color kMarks[kNumMarks] = {
+  { 89,  145,  206 },
+  { 117, 168,  221 },
+  { 63,  120,  185 },
+  { 63,  120,  183 },
+  { 75,  131,  192 },
+  { 71,  125,  187 }
+};
 
 void EyesRender::draw_and_publish(size_t x, size_t y) {
   cairo_t *cr = cairo_create(surface_);
@@ -42,18 +58,38 @@ void EyesRender::draw_and_publish(size_t x, size_t y) {
   cairo_paint(cr);
 
   cairo_translate(cr, x, y);
+  cairo_rotate(cr, kEyeRotation);
 
   // iris
   {
     // source
     const double half_grad_height = kIrisHeight / 2.0;
 
-    // fill - gradient
+    cairo_push_group(cr);
+
+    // fill - gradient and these beautiful eyemarks
     cairo_pattern_t *pat = cairo_pattern_create_linear(0.0, -half_grad_height,
                                                        0.0, half_grad_height);
     cairo_pattern_add_color_stop_rgb(pat, 0, grad_top.r, grad_top.g, grad_top.b);
     cairo_pattern_add_color_stop_rgb(pat, 1, grad_bottom.r, grad_bottom.g, grad_bottom.b);
+
     cairo_set_source(cr, pat);
+    cairo_paint(cr);
+
+    // beautiful eyemarks
+    double current_angle = kMarkStartAngle;
+
+    for (int i = 0; i < kNumMarks; i++, current_angle += kMarkStepAngle) {
+      cairo_move_to(cr, img_diam_ * std::cos(current_angle), img_diam_ * std::sin(-current_angle));
+      cairo_line_to(cr, 0, 0);
+      cairo_line_to(cr, img_diam_ * std::cos(current_angle + kMarkStepAngle), img_diam_ * std::sin(-(current_angle + kMarkStepAngle)));
+      cairo_close_path(cr);
+
+      cairo_set_source_rgb(cr, kMarks[i].r / 255.0, kMarks[i].g / 255.0, kMarks[i].b / 255.0);
+      cairo_fill(cr);
+    }
+
+    cairo_pop_group_to_source(cr);
 
     // mask - iris shape
     {

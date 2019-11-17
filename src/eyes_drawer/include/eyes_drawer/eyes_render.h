@@ -27,4 +27,6 @@ class EyesRender {
 
     const size_t img_width_;
     const size_t img_height_;
+
+    const size_t img_diam_;
 };
